@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
+use Symfony\Component\Console\Input\Input;
 
 class CurlController extends Controller
 {
@@ -54,5 +57,19 @@ class CurlController extends Controller
         $url = 'https://jsonplaceholder.typicode.com/posts/1';
         $response=Curl::to($url)->delete();
         dd($response);
+    }
+
+    public function send(Request $request){
+        $query = $request->data;
+        $query = $request->input('query', $request->value);
+        $url = 'https://api.themoviedb.org/3/search/movie?api_key=8a9be9d05bd9f9d5ca154aaf42504303&language=en-US&query='.$query;
+        $news = Curl::to($url)
+        ->asJson()
+        ->get();
+            $succes=[
+                'data' => $news
+            ];
+
+            return response()->json($succes,201);
     }
 }
